@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string> 
 #include <variant>
-
+#include <cctype>
 
 void printChar(char c)
 {
@@ -110,13 +110,42 @@ void SpecialPrint(std::string str)
 }
 
 
+void printConvertchar(std::string& str)
+{
+	try {
+		std::stringstream ss;
+		char nb;
+		ss << str;
+		ss >> nb;
+		if(ss.fail())
+			throw std::exception();
+		printChar(static_cast<char>(nb));
+		std::cout << "int: " << static_cast<int> (nb) << std::endl;
+		std::cout << "float: " << static_cast<float> (nb) << "f" << std::endl;
+		std::cout << "double: " << static_cast<double> (nb)<< std::endl;
+	}
+	catch(std::exception &e)
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: impossible" << std::endl;
+		std::cout << "double: impossible" << std::endl;
+	}
+}
 
+
+bool isChar(std::string& rep)
+{
+	return rep.size() == 1 && isalpha(rep.at(0));
+}
 
 void ScalarConverter::convert(std::string &rep)
 {
 
 	if (isSpecial(rep))
 		SpecialPrint(rep);
+	else if (isChar(rep))
+		printConvertchar(rep);
 	else if(rep.find('.') != std::string::npos)
 		printConvertDouble(rep);
 	else if(rep.find('f') != std::string::npos)
